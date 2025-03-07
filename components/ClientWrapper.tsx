@@ -3,6 +3,7 @@
 import { SchematicProvider } from "@schematichq/schematic-react";
 import SchematicWrapped from "./SchematicWrapped";
 import { ConvexClientProvider } from "./ConvexClientProvider";
+import { VideoTaskProvider } from "./VideoTaskContext";
 
 export default function ClientWrapper({
   children,
@@ -18,7 +19,9 @@ export default function ClientWrapper({
   return (
     <ConvexClientProvider>
       <SchematicProvider publishableKey={schematicPubKey}>
-        <SchematicWrapped>{children}</SchematicWrapped>
+        <SchematicWrapped>
+          <VideoTaskProvider>{children}</VideoTaskProvider>
+        </SchematicWrapped>
       </SchematicProvider>
     </ConvexClientProvider>
   );

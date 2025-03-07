@@ -7,32 +7,60 @@ import TitleGenerations from "@/components/TitleGenerations";
 import Transcription from "@/components/Transcription";
 import Usage from "@/components/Usage";
 import YoutubeVideoDetails from "@/components/YoutubeVideoDetails";
+import VideoTaskManager from "@/components/VideoTaskManager";
 import { Doc } from "@/convex/_generated/dataModel";
 import { FeatureFlag } from "@/features/flags";
 import { useUser } from "@clerk/nextjs";
+import { MessageSquare, CheckSquare, ShieldAlert } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 function AnalysisPage() {
   const params = useParams<{ videoId: string }>();
   const { videoId } = params;
-  const { user } = useUser();
+  const { user, isSignedIn, isLoaded } = useUser();
   const [video, setVideo] = useState<Doc<"videos"> | null | undefined>(
     undefined
   );
+  const [activeTab, setActiveTab] = useState<"chat" | "tasks">("chat");
+
+  // Authentication status message
+  useEffect(() => {
+    console.log("Auth state on analysis page:", {
+      isSignedIn,
+      isLoaded,
+      userId: user?.id,
+    });
+
+    if (isLoaded && !isSignedIn) {
+      toast.error("Authentication required", {
+        description:
+          "You need to sign in to save chats and tasks. Your data will be lost on page refresh.",
+        duration: 5000,
+        icon: <ShieldAlert className="w-4 h-4" />,
+      });
+    }
+  }, [isSignedIn, isLoaded, user?.id]);
 
   useEffect(() => {
-    if (!user?.id) return;
+    if (!user?.id) {
+      console.log("User not authenticated - video data won't be persisted");
+      return;
+    }
 
     const fetchVideo = async () => {
+      console.log("Fetching video data for:", { videoId, userId: user.id });
       // Analyse the video (add video to db here)
       const response = await createOrGetVideo(videoId as string, user.id);
       if (!response.success) {
+        console.error("Error fetching video:", response.error);
         // toast.error("Error creating or getting video", {
         //   description: response.error,
         //   duration: 10000,
         // });
       } else {
+        console.log("Video data fetched successfully");
         setVideo(response.data!);
       }
     };
@@ -96,9 +124,41 @@ function AnalysisPage() {
         </div>
 
         {/* Right Side */}
-        <div className="order-1 lg:order-2 lg:sticky lg:top-20 h-[500px] md:h-[calc(100vh-6rem)]">
-          {/* Ai Agent Chat Section */}
-          <AiAgentChat videoId={videoId} />
+        <div className="order-1 lg:order-2 lg:sticky lg:top-20 h-[500px] md:h-[calc(100vh-6rem)] flex flex-col">
+          {/* Tab buttons */}
+          <div className="flex border-b border-gray-200">
+            <button
+              className={`flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium flex-1 ${
+                activeTab === "chat"
+                  ? "text-blue-600 border-b-2 border-blue-500"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+              onClick={() => setActiveTab("chat")}
+            >
+              <MessageSquare className="w-4 h-4" />
+              AI Chat
+            </button>
+            <button
+              className={`flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium flex-1 ${
+                activeTab === "tasks"
+                  ? "text-blue-600 border-b-2 border-blue-500"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+              onClick={() => setActiveTab("tasks")}
+            >
+              <CheckSquare className="w-4 h-4" />
+              Video Tasks
+            </button>
+          </div>
+
+          {/* Tab content */}
+          <div className="flex-1 overflow-hidden">
+            {activeTab === "chat" ? (
+              <AiAgentChat videoId={videoId} />
+            ) : (
+              <VideoTaskManager videoId={videoId} />
+            )}
+          </div>
         </div>
       </div>
     </div>

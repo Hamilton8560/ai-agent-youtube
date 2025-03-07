@@ -13,7 +13,11 @@ const nextConfig: NextConfig = {
         protocol: "https",
       },
       {
-        hostname: "acoustic-orca-473.convex.cloud",
+        hostname: "sincere-ferret-226.convex.cloud",
+        protocol: "https",
+      },
+      {
+        hostname: "sincere-ferret-226.convex.site",
         protocol: "https",
       },
     ],
