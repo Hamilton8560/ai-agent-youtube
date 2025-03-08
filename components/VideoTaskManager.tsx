@@ -17,6 +17,8 @@ import {
   Sparkles,
   Loader2,
   Lightbulb,
+  CheckSquare,
+  Square,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
@@ -389,7 +391,58 @@ export default function VideoTaskManager({ videoId }: { videoId: string }) {
                   </span>
                 </div>
                 <div className="prose prose-sm max-w-none">
-                  <ReactMarkdown>{task.content}</ReactMarkdown>
+                  <ReactMarkdown
+                    components={{
+                      ul: ({ node, ...props }) => (
+                        <ul className="list-disc pl-5 space-y-1" {...props} />
+                      ),
+                      ol: ({ node, ...props }) => (
+                        <ol
+                          className="list-decimal pl-5 space-y-1"
+                          {...props}
+                        />
+                      ),
+                      li: ({ node, children, ...props }) => {
+                        // Check if this is a checkbox item by examining the content
+                        if (node?.children?.[0]?.type === "text") {
+                          const content = (node.children[0] as any).value || "";
+                          const isCheckbox =
+                            content.trim().startsWith("[ ]") ||
+                            content.trim().startsWith("[x]");
+
+                          if (isCheckbox) {
+                            const isChecked = content.trim().startsWith("[x]");
+                            const textContent = content
+                              .replace(/\[\s?\]|\[x\]/, "")
+                              .trim();
+
+                            return (
+                              <li className="flex items-start gap-2" {...props}>
+                                <div className="mt-0.5 flex-shrink-0">
+                                  {isChecked ? (
+                                    <CheckSquare className="w-4 h-4 text-green-500" />
+                                  ) : (
+                                    <Square className="w-4 h-4 text-gray-300" />
+                                  )}
+                                </div>
+                                <span>{textContent}</span>
+                                {children}
+                              </li>
+                            );
+                          }
+                        }
+
+                        // Regular list item
+                        return (
+                          <li className="my-1" {...props}>
+                            {children}
+                          </li>
+                        );
+                      },
+                    }}
+                  >
+                    {task.content}
+                  </ReactMarkdown>
                 </div>
               </div>
 
