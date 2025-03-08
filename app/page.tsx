@@ -88,16 +88,21 @@ const features = [
 
 // Animation hook for elements entering viewport
 const useIntersectionObserver = () => {
-  const [observedElements, setObservedElements] = useState({});
+  const [observedElements, setObservedElements] = useState<
+    Record<string, boolean>
+  >({});
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          setObservedElements((prev) => ({
-            ...prev,
-            [(entry.target as HTMLElement).dataset.id]: entry.isIntersecting,
-          }));
+          const id = (entry.target as HTMLElement).dataset.id;
+          if (id) {
+            setObservedElements((prev) => ({
+              ...prev,
+              [id]: entry.isIntersecting,
+            }));
+          }
         });
       },
       { threshold: 0.1 }
@@ -119,7 +124,7 @@ const useIntersectionObserver = () => {
 
 export default function Home() {
   const observedElements = useIntersectionObserver();
-  const [isHovered, setIsHovered] = useState(null);
+  const [isHovered, setIsHovered] = useState<number | null>(null);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white overflow-hidden">
@@ -139,11 +144,11 @@ export default function Home() {
               <AgentPulse size="large" color="blue" />
             </div>
 
-            <h1 
-              data-id="hero-title" 
+            <h1
+              data-id="hero-title"
               className={`text-5xl md:text-7xl font-extrabold tracking-tight text-gray-900 mb-6 transition-all duration-1000 ${
-                observedElements["hero-title"] 
-                  ? "opacity-100 translate-y-0" 
+                observedElements["hero-title"]
+                  ? "opacity-100 translate-y-0"
                   : "opacity-0 translate-y-12"
               }`}
             >
@@ -152,17 +157,26 @@ export default function Home() {
                 <span className="bg-gradient-to-r from-blue-600 via-purple-500 to-blue-400 bg-clip-text text-transparent">
                   AI Content Agent
                 </span>
-                <svg className="absolute -bottom-2 left-0 w-full h-3 text-blue-400 opacity-50" viewBox="0 0 100 30">
-                  <path d="M0,20 Q50,5 100,20" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
+                <svg
+                  className="absolute -bottom-2 left-0 w-full h-3 text-blue-400 opacity-50"
+                  viewBox="0 0 100 30"
+                >
+                  <path
+                    d="M0,20 Q50,5 100,20"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                    strokeLinecap="round"
+                  />
                 </svg>
               </span>
             </h1>
 
-            <p 
-              data-id="hero-desc" 
+            <p
+              data-id="hero-desc"
               className={`text-xl md:text-2xl text-gray-600 mb-10 max-w-2xl mx-auto transition-all duration-1000 delay-300 ${
-                observedElements["hero-desc"] 
-                  ? "opacity-100 translate-y-0" 
+                observedElements["hero-desc"]
+                  ? "opacity-100 translate-y-0"
                   : "opacity-0 translate-y-12"
               }`}
             >
@@ -170,11 +184,11 @@ export default function Home() {
               transcription, and insights. Get started in seconds.
             </p>
 
-            <div 
-              data-id="hero-form" 
+            <div
+              data-id="hero-form"
               className={`w-full max-w-3xl mx-auto transition-all duration-1000 delay-500 ${
-                observedElements["hero-form"] 
-                  ? "opacity-100 translate-y-0" 
+                observedElements["hero-form"]
+                  ? "opacity-100 translate-y-0"
                   : "opacity-0 translate-y-12"
               }`}
             >
@@ -187,22 +201,28 @@ export default function Home() {
           </div>
 
           {/* Trusted by section */}
-          <div 
-            data-id="trusted-by" 
+          <div
+            data-id="trusted-by"
             className={`mt-20 text-center transition-all duration-1000 delay-700 ${
-              observedElements["trusted-by"] 
-                ? "opacity-100 translate-y-0" 
+              observedElements["trusted-by"]
+                ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-12"
             }`}
           >
-            <p className="text-gray-500 uppercase text-sm font-semibold tracking-wider mb-6">Trusted by content creators worldwide</p>
+            <p className="text-gray-500 uppercase text-sm font-semibold tracking-wider mb-6">
+              Trusted by content creators worldwide
+            </p>
             <div className="flex flex-wrap justify-center gap-8 items-center opacity-70">
-              {["YouTube", "TikTok", "Instagram", "Twitch", "LinkedIn"].map((platform) => (
-                <div key={platform} className="flex items-center">
-                  <div className="w-3 h-3 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 mr-2"></div>
-                  <span className="text-gray-800 font-medium">{platform}</span>
-                </div>
-              ))}
+              {["YouTube", "TikTok", "Instagram", "Twitch", "LinkedIn"].map(
+                (platform) => (
+                  <div key={platform} className="flex items-center">
+                    <div className="w-3 h-3 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 mr-2"></div>
+                    <span className="text-gray-800 font-medium">
+                      {platform}
+                    </span>
+                  </div>
+                )
+              )}
             </div>
           </div>
         </div>
@@ -212,16 +232,19 @@ export default function Home() {
       <section className="py-24 sm:py-32 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-white to-gray-50 z-0"></div>
         <div className="container mx-auto px-4 max-w-6xl relative z-10">
-          <div 
-            data-id="features-title" 
+          <div
+            data-id="features-title"
             className={`text-center mb-16 transition-all duration-1000 ${
-              observedElements["features-title"] 
-                ? "opacity-100 translate-y-0" 
+              observedElements["features-title"]
+                ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-12"
             }`}
           >
             <h2 className="text-3xl md:text-5xl font-bold mb-4">
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Powerful Features</span> for Content Creators
+              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                Powerful Features
+              </span>{" "}
+              for Content Creators
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Our AI-powered tools help you create better content, faster
@@ -236,8 +259,8 @@ export default function Home() {
                   key={index}
                   data-id={`feature-${index}`}
                   className={`relative group transition-all duration-700 delay-${index * 100} ${
-                    observedElements[`feature-${index}`] 
-                      ? "opacity-100 translate-y-0" 
+                    observedElements[`feature-${index}`]
+                      ? "opacity-100 translate-y-0"
                       : "opacity-0 translate-y-12"
                   }`}
                   onMouseEnter={() => setIsHovered(index)}
@@ -266,7 +289,7 @@ export default function Home() {
                         )}
                       </div>
                     )}
-                    
+
                     <div
                       className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 ${feature.iconBg} transition-transform duration-300 ${
                         isHovered === index ? "scale-110" : ""
@@ -302,16 +325,17 @@ export default function Home() {
       <section className="py-24 sm:py-32 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-gray-50 to-white z-0"></div>
         <div className="container mx-auto px-4 max-w-6xl relative z-10">
-          <div 
-            data-id="steps-title" 
+          <div
+            data-id="steps-title"
             className={`text-center mb-16 transition-all duration-1000 ${
-              observedElements["steps-title"] 
-                ? "opacity-100 translate-y-0" 
+              observedElements["steps-title"]
+                ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-12"
             }`}
           >
             <h2 className="text-3xl md:text-5xl font-bold mb-4">
-              Meet Your AI Agent in <span className="text-blue-600">3 Simple Steps</span>
+              Meet Your AI Agent in{" "}
+              <span className="text-blue-600">3 Simple Steps</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Getting started is effortless and takes less than a minute
@@ -321,7 +345,7 @@ export default function Home() {
           <div className="relative">
             {/* Connecting line */}
             <div className="absolute top-1/2 left-0 w-full h-1 bg-gray-200 hidden md:block -translate-y-1/2 z-0"></div>
-            
+
             <div className="grid md:grid-cols-3 gap-8 md:gap-12 relative z-10">
               {steps.map((step, index) => {
                 const Icon = step.icon;
@@ -330,8 +354,8 @@ export default function Home() {
                     key={index}
                     data-id={`step-${index}`}
                     className={`relative transition-all duration-700 delay-${index * 200} ${
-                      observedElements[`step-${index}`] 
-                        ? "opacity-100 translate-y-0" 
+                      observedElements[`step-${index}`]
+                        ? "opacity-100 translate-y-0"
                         : "opacity-0 translate-y-12"
                     }`}
                   >
@@ -359,15 +383,17 @@ export default function Home() {
           <div className="absolute -top-24 -right-24 w-96 h-96 bg-blue-100 rounded-full opacity-50 blur-3xl"></div>
           <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-purple-100 rounded-full opacity-50 blur-3xl"></div>
         </div>
-        <div 
+        <div
           className="container mx-auto px-4 max-w-6xl relative z-10"
-          data-id="testimonials" 
+          data-id="testimonials"
         >
-          <div className={`text-center mb-16 transition-all duration-1000 ${
-              observedElements["testimonials"] 
-                ? "opacity-100 translate-y-0" 
+          <div
+            className={`text-center mb-16 transition-all duration-1000 ${
+              observedElements["testimonials"]
+                ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-12"
-            }`}>
+            }`}
+          >
             <h2 className="text-3xl md:text-5xl font-bold mb-4">
               Loved by Content Creators
             </h2>
@@ -378,39 +404,50 @@ export default function Home() {
 
           <div className="grid md:grid-cols-3 gap-8">
             {[1, 2, 3].map((i) => (
-              <div 
+              <div
                 key={i}
-                data-id={`testimonial-${i}`} 
+                data-id={`testimonial-${i}`}
                 className={`bg-white p-8 rounded-2xl shadow-xl border border-gray-100 transition-all duration-700 delay-${i * 200} ${
-                  observedElements[`testimonial-${i}`] 
-                    ? "opacity-100 translate-y-0" 
+                  observedElements[`testimonial-${i}`]
+                    ? "opacity-100 translate-y-0"
                     : "opacity-0 translate-y-12"
                 }`}
               >
                 <div className="flex items-center mb-6">
                   <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                    {["J", "S", "M"][i-1]}
+                    {["J", "S", "M"][i - 1]}
                   </div>
                   <div className="ml-4">
                     <h4 className="font-bold text-gray-900">
-                      {["Jamie Smith", "Sarah Johnson", "Michael Chen"][i-1]}
+                      {["Jamie Smith", "Sarah Johnson", "Michael Chen"][i - 1]}
                     </h4>
                     <p className="text-gray-500 text-sm">
-                      {["YouTube Creator", "Content Strategist", "Video Producer"][i-1]}
+                      {
+                        [
+                          "YouTube Creator",
+                          "Content Strategist",
+                          "Video Producer",
+                        ][i - 1]
+                      }
                     </p>
                   </div>
                 </div>
                 <div className="flex mb-4">
                   {[...Array(5)].map((_, j) => (
-                    <Star key={j} className="w-5 h-5 text-yellow-400 fill-current" />
+                    <Star
+                      key={j}
+                      className="w-5 h-5 text-yellow-400 fill-current"
+                    />
                   ))}
                 </div>
                 <p className="text-gray-600">
-                  {[
-                    "This AI agent completely transformed my content strategy. The insights and recommendations are spot-on and have helped me grow my channel significantly.",
-                    "The thumbnail and title generation features alone are worth it. I've seen a 40% increase in click-through rates since I started using this tool.",
-                    "Being able to discuss content ideas with my AI agent has been a game-changer. It's like having a creative partner available 24/7."
-                  ][i-1]}
+                  {
+                    [
+                      "This AI agent completely transformed my content strategy. The insights and recommendations are spot-on and have helped me grow my channel significantly.",
+                      "The thumbnail and title generation features alone are worth it. I've seen a 40% increase in click-through rates since I started using this tool.",
+                      "Being able to discuss content ideas with my AI agent has been a game-changer. It's like having a creative partner available 24/7.",
+                    ][i - 1]
+                  }
                 </p>
               </div>
             ))}
@@ -419,15 +456,14 @@ export default function Home() {
       </section>
 
       {/* CTA section */}
-      <section 
-        className="py-24 sm:py-32 relative"
-        data-id="cta-section"
-      >
-        <div className={`container mx-auto px-4 max-w-5xl transition-all duration-1000 ${
-            observedElements["cta-section"] 
-              ? "opacity-100 translate-y-0" 
+      <section className="py-24 sm:py-32 relative" data-id="cta-section">
+        <div
+          className={`container mx-auto px-4 max-w-5xl transition-all duration-1000 ${
+            observedElements["cta-section"]
+              ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-12"
-          }`}>
+          }`}
+        >
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-3xl blur-lg opacity-90 transform -rotate-1"></div>
             <div className="relative bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-2xl overflow-hidden">
@@ -437,7 +473,8 @@ export default function Home() {
                   Ready to Meet Your AI Content Agent?
                 </h2>
                 <p className="text-xl text-blue-100 mb-10 max-w-2xl mx-auto">
-                  Join creators leveraging AI to unlock content insights and take your content to the next level
+                  Join creators leveraging AI to unlock content insights and
+                  take your content to the next level
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <button className="px-8 py-4 bg-white text-blue-600 font-bold rounded-xl shadow-xl hover:bg-gray-50 transition-all hover:shadow-2xl transform hover:-translate-y-1">
@@ -458,15 +495,21 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-6 md:mb-0 flex items-center">
-              <AgentPulse size="small" color="white" />
+              <AgentPulse size="small" color="blue" />
               <span className="ml-2 text-xl font-bold">AI Content Agent</span>
             </div>
             <div className="flex gap-6">
-              {["About", "Features", "Pricing", "Blog", "Contact"].map((item) => (
-                <a key={item} href="#" className="text-gray-400 hover:text-white transition-colors">
-                  {item}
-                </a>
-              ))}
+              {["About", "Features", "Pricing", "Blog", "Contact"].map(
+                (item) => (
+                  <a
+                    key={item}
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    {item}
+                  </a>
+                )
+              )}
             </div>
           </div>
           <div className="mt-8 pt-8 border-t border-gray-800 text-gray-400 text-sm text-center">
@@ -474,7 +517,7 @@ export default function Home() {
           </div>
         </div>
       </footer>
-      
+
       {/* CSS for animations */}
       <style jsx>{`
         @keyframes blob {
@@ -501,7 +544,13 @@ export default function Home() {
           animation-delay: 4s;
         }
         .bg-grid {
-          mask-image: linear-gradient(to bottom, transparent, black, black, transparent);
+          mask-image: linear-gradient(
+            to bottom,
+            transparent,
+            black,
+            black,
+            transparent
+          );
         }
         .bg-grid-white\\/10 {
           background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(255 255 255 / 0.1)'%3e%3cpath d='M0 .5H31.5V32'/%3e%3c/svg%3e");
