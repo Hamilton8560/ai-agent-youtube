@@ -2,6 +2,7 @@
 
 import { createOrGetVideo } from "@/actions/createOrGetVideo";
 import AiAgentChat from "@/components/AiAgentChat";
+import FeatureFlagDebug from "@/components/FeatureFlagDebug";
 import ThumbnailGeneration from "@/components/ThumbnailGeneration";
 import TitleGenerations from "@/components/TitleGenerations";
 import Transcription from "@/components/Transcription";
@@ -96,6 +97,7 @@ function AnalysisPage() {
 
   return (
     <div className="xl:container mx-auto px-4 md:px-0">
+      <FeatureFlagDebug />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Left Side */}
         <div className="order-2 lg:order-1 flex flex-col gap-4 bg-white lg:border-r border-gray-200 p-6">
