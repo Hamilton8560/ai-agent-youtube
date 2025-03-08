@@ -12,7 +12,7 @@ export async function titleGeneration(
   considerations: string
 ) {
   const user = await currentUser();
-  const { convex: convexClient, schematic: client } = getSafeClients();
+  const { convex: convexClient, schematic: client } = await getSafeClients();
 
   if (!user?.id) {
     throw new Error("User not found");

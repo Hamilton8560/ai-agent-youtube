@@ -10,7 +10,7 @@ const IMAGE_SIZE = "1792x1024" as const;
 
 export const dalleImageGeneration = async (prompt: string, videoId: string) => {
   const user = await currentUser();
-  const { convex: convexClient, schematic: client } = getSafeClients();
+  const { convex: convexClient, schematic: client } = await getSafeClients();
 
   if (!user?.id) {
     throw new Error("User not found");
@@ -51,6 +51,11 @@ export const dalleImageGeneration = async (prompt: string, videoId: string) => {
   console.log("⬇️ Downloading image from OpenAI...");
   const image: Blob = await fetch(imageUrl).then((res) => res.blob());
   console.log("✅ Downloaded image successfully");
+
+  // Check if postUrl is valid
+  if (!postUrl) {
+    throw new Error("Failed to get upload URL from Convex");
+  }
 
   // Step 3: Upload the image to the convex storage bucket
   console.log("📁 Uploading image to storage...");

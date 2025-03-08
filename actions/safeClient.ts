@@ -6,7 +6,7 @@ import { getConvexClient } from "@/lib/convex";
 import { client as schematicClient } from "@/lib/schematic";
 
 // Safely get clients in a way that won't break builds
-export function getSafeClients() {
+export async function getSafeClients() {
   // Make a safe version of convex client
   let convexClient;
   try {

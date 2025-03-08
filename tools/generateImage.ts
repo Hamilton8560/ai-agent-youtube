@@ -12,7 +12,7 @@ export const generateImage = (videoId: string, userId: string) =>
       videoId: z.string().describe("The YouTube video ID"),
     }),
     execute: async ({ prompt }) => {
-      const { schematic: client } = getSafeClients();
+      const { schematic: client } = await getSafeClients();
 
       const schematicCtx = {
         company: { id: userId },
