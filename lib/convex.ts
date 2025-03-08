@@ -1,5 +1,4 @@
 import { ConvexHttpClient } from "convex/browser";
-import { api } from "@/convex/_generated/api";
 
 type MockClient = {
   query: typeof ConvexHttpClient.prototype.query;
