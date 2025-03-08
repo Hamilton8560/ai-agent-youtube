@@ -1,6 +1,6 @@
 import { dalleImageGeneration } from "@/actions/dalleImageGeneration";
 import { FeatureFlag } from "@/features/flags";
-import { client } from "@/lib/schematic";
+import { getSafeClients } from "@/actions/safeClient";
 import { tool } from "ai";
 import { z } from "zod";
 
@@ -12,6 +12,8 @@ export const generateImage = (videoId: string, userId: string) =>
       videoId: z.string().describe("The YouTube video ID"),
     }),
     execute: async ({ prompt }) => {
+      const { schematic: client } = getSafeClients();
+
       const schematicCtx = {
         company: { id: userId },
         user: {

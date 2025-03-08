@@ -2,12 +2,9 @@
 
 import { api } from "@/convex/_generated/api";
 import { FeatureFlag, featureFlagEvents } from "@/features/flags";
-import { getConvexClient } from "@/lib/convex";
-import { client } from "@/lib/schematic";
+import { getSafeClients } from "@/actions/safeClient";
 import { currentUser } from "@clerk/nextjs/server";
 import OpenAI from "openai";
-
-const convexClient = getConvexClient();
 
 export async function titleGeneration(
   videoId: string,
@@ -15,6 +12,7 @@ export async function titleGeneration(
   considerations: string
 ) {
   const user = await currentUser();
+  const { convex: convexClient, schematic: client } = getSafeClients();
 
   if (!user?.id) {
     throw new Error("User not found");
