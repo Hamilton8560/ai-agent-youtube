@@ -96,7 +96,7 @@ const useIntersectionObserver = () => {
         entries.forEach((entry) => {
           setObservedElements((prev) => ({
             ...prev,
-            [(entry.target as HTMLElement).dataset.id]: entry.isIntersecting,
+            [((entry.target as HTMLElement).dataset.id ?? "")]: entry.isIntersecting,
           }));
         });
       },
