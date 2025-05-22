@@ -62,7 +62,10 @@ Completed: ${task.completed}`
     if (!anthropicApiKey) {
       console.log("⚠️ No Claude API key found in environment variables");
     } else {
-      console.log("✅ Claude API key found");
+      console.log(
+        "✅ Claude API key found:",
+        anthropicApiKey.substring(0, 8) + "..."
+      );
     }
 
     if (anthropicApiKey && anthropicApiKey !== "your_anthropic_api_key_here") {
@@ -142,12 +145,22 @@ ${taskList}`,
         return processAIResponse(result, user.id);
       } catch (claudeError) {
         console.error("❌ Error using Claude:", claudeError);
+        const errorMessage =
+          claudeError instanceof Error
+            ? claudeError.message
+            : "Unknown Claude error";
+        console.error("❌ Claude error details:", errorMessage);
+
         // Fall back to OpenAI if Claude fails
-        return fallbackToOpenAI(taskList, user.id);
+        return fallbackToOpenAI(
+          taskList,
+          user.id,
+          `Claude error: ${errorMessage}`
+        );
       }
     } else {
       console.log("🔄 Falling back to OpenAI (No Claude API key found)");
-      return fallbackToOpenAI(taskList, user.id);
+      return fallbackToOpenAI(taskList, user.id, "No valid Claude API key");
     }
   } catch (error) {
     console.error("❌ Error organizing tasks:", error);
@@ -158,18 +171,26 @@ ${taskList}`,
 }
 
 // Function to fallback to OpenAI if Claude is not available
-async function fallbackToOpenAI(taskList: string, userId: string) {
+async function fallbackToOpenAI(
+  taskList: string,
+  userId: string,
+  claudeErrorReason: string = ""
+) {
   try {
     // Check if OpenAI API key is available
     const openaiApiKey = process.env.OPENAI_API_KEY;
     if (!openaiApiKey) {
       return {
-        error:
-          "No AI service available. Please set up API keys for Claude or OpenAI.",
+        error: `No AI service available. Please set up API keys for Claude or OpenAI. Claude issue: ${claudeErrorReason}`,
       };
     }
 
     console.log("🤖 Using OpenAI as fallback for task organization");
+    console.log(
+      "✅ OpenAI API key found:",
+      openaiApiKey.substring(0, 8) + "..."
+    );
+
     const openai = new OpenAI({
       apiKey: openaiApiKey,
     });
@@ -236,8 +257,14 @@ ${taskList}`,
     return processAIResponse(result, userId);
   } catch (openaiError) {
     console.error("❌ Error using OpenAI fallback:", openaiError);
+    const errorMessage =
+      openaiError instanceof Error
+        ? openaiError.message
+        : "Unknown OpenAI error";
+    console.error("❌ OpenAI error details:", errorMessage);
+
     return {
-      error: `Failed with both AI services: ${openaiError instanceof Error ? openaiError.message : "Unknown error"}`,
+      error: `Failed with both AI services: Connection error. Claude issue: ${claudeErrorReason}. OpenAI issue: ${errorMessage}`,
     };
   }
 }
