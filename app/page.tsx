@@ -88,7 +88,7 @@ const features = [
 
 // Animation hook for elements entering viewport
 const useIntersectionObserver = () => {
-  const [observedElements, setObservedElements] = useState({});
+  const [observedElements, setObservedElements] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -119,7 +119,7 @@ const useIntersectionObserver = () => {
 
 export default function Home() {
   const observedElements = useIntersectionObserver();
-  const [isHovered, setIsHovered] = useState(null);
+  const [isHovered, setIsHovered] = useState<number | null>(null);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white overflow-hidden">
@@ -458,7 +458,7 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-6 md:mb-0 flex items-center">
-              <AgentPulse size="small" color="white" />
+              <AgentPulse size="small" color="blue" />
               <span className="ml-2 text-xl font-bold">AI Content Agent</span>
             </div>
             <div className="flex gap-6">
