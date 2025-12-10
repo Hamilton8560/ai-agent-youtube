@@ -364,16 +364,18 @@ async function processAIResponse(result: string, userId: string) {
       // Replace the original tasks with our enhanced version
       parsedResult.organizedTasks = enhancedTasks;
 
-      // Track the event
-      await client.track({
-        event: "task_organization",
-        company: {
-          id: userId,
-        },
-        user: {
-          id: userId,
-        },
-      });
+      // Track the event if Schematic is configured
+      if (client) {
+        await client.track({
+          event: "task_organization",
+          company: {
+            id: userId,
+          },
+          user: {
+            id: userId,
+          },
+        });
+      }
 
       console.log(
         `🗂️ Successfully organized ${enhancedTasks.length} tasks with detailed breakdowns`

@@ -63,15 +63,18 @@ export const createOrGetVideo = async (
       });
 
       console.log("Tracking analyse video event...");
-      await client.track({
-        event: featureFlagEvents[FeatureFlag.ANALYSE_VIDEO].event,
-        company: {
-          id: userId,
-        },
-        user: {
-          id: userId,
-        },
-      });
+      // Track event if Schematic is configured
+      if (client) {
+        await client.track({
+          event: featureFlagEvents[FeatureFlag.ANALYSE_VIDEO].event,
+          company: {
+            id: userId,
+          },
+          user: {
+            id: userId,
+          },
+        });
+      }
 
       return {
         success: true,

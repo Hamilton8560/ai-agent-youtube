@@ -1,12 +1,12 @@
 import { SchematicClient } from "@schematichq/schematic-typescript-node";
 
-if (!process.env.SCHEMATIC_API_KEY) {
-  throw new Error("SCHEMATIC_API_KEY is not set");
-}
-
-export const client = new SchematicClient({
-  apiKey: process.env.SCHEMATIC_API_KEY,
-  cacheProviders: {
-    flagChecks: [],
-  },
-});
+// Only create the client if the API key is available
+// This allows the build to succeed even without the key
+export const client = process.env.SCHEMATIC_API_KEY
+  ? new SchematicClient({
+      apiKey: process.env.SCHEMATIC_API_KEY,
+      cacheProviders: {
+        flagChecks: [],
+      },
+    })
+  : null;

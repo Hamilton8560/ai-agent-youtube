@@ -12,22 +12,25 @@ export const generateImage = (videoId: string, userId: string) =>
       videoId: z.string().describe("The YouTube video ID"),
     }),
     execute: async ({ prompt }) => {
-      const schematicCtx = {
-        company: { id: userId },
-        user: {
-          id: userId,
-        },
-      };
-
-      const isImageGenerationEnabled = await client.checkFlag(
-        schematicCtx,
-        FeatureFlag.IMAGE_GENERATION
-      );
-
-      if (!isImageGenerationEnabled) {
-        return {
-          error: "Image generation is not enabled, the user must upgrade",
+      // Check if image generation is enabled (allow if Schematic is not configured)
+      if (client) {
+        const schematicCtx = {
+          company: { id: userId },
+          user: {
+            id: userId,
+          },
         };
+
+        const isImageGenerationEnabled = await client.checkFlag(
+          schematicCtx,
+          FeatureFlag.IMAGE_GENERATION
+        );
+
+        if (!isImageGenerationEnabled) {
+          return {
+            error: "Image generation is not enabled, the user must upgrade",
+          };
+        }
       }
 
       const image = await dalleImageGeneration(prompt, videoId);

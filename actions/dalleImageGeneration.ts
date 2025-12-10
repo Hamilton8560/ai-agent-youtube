@@ -79,16 +79,18 @@ export const dalleImageGeneration = async (prompt: string, videoId: string) => {
     userId: user.id,
   });
 
-  // Track the image generation event
-  await client.track({
-    event: featureFlagEvents[FeatureFlag.IMAGE_GENERATION].event,
-    company: {
-      id: user.id,
-    },
-    user: {
-      id: user.id,
-    },
-  });
+  // Track the image generation event if Schematic is configured
+  if (client) {
+    await client.track({
+      event: featureFlagEvents[FeatureFlag.IMAGE_GENERATION].event,
+      company: {
+        id: user.id,
+      },
+      user: {
+        id: user.id,
+      },
+    });
+  }
 
   return {
     imageUrl: dbImageUrl,

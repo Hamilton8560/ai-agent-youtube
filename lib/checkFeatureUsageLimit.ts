@@ -6,6 +6,12 @@ export async function checkFeatureUsageLimit(
   eventSubtype: string
 ): Promise<{ success: boolean; error?: string }> {
   try {
+    // If Schematic is not configured, allow all operations
+    if (!client) {
+      console.warn("Schematic client not configured - allowing operation");
+      return { success: true };
+    }
+
     const entitlements = await client.entitlements.getFeatureUsageByCompany({
       keys: {
         id: userId,

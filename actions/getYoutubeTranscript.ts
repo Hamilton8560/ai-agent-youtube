@@ -97,16 +97,21 @@ export async function getYoutubeTranscript(videoId: string) {
     console.log(`✅ Transcript successfully stored in database`);
 
     console.log(`📊 Tracking transcription event with Schematic`);
-    await client.track({
-      event: featureFlagEvents[FeatureFlag.TRANSCRIPTION].event,
-      company: {
-        id: user.id,
-      },
-      user: {
-        id: user.id,
-      },
-    });
-    console.log(`✅ Event tracking complete`);
+    // Track event if Schematic is configured
+    if (client) {
+      await client.track({
+        event: featureFlagEvents[FeatureFlag.TRANSCRIPTION].event,
+        company: {
+          id: user.id,
+        },
+        user: {
+          id: user.id,
+        },
+      });
+      console.log(`✅ Event tracking complete`);
+    } else {
+      console.log(`⚠️ Schematic not configured - skipping event tracking`);
+    }
 
     return {
       transcript,

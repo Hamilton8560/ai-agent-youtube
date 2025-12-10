@@ -61,15 +61,18 @@ export async function titleGeneration(
       title: title,
     });
 
-    await client.track({
-      event: featureFlagEvents[FeatureFlag.TITLE_GENERATIONS].event,
-      company: {
-        id: user.id,
-      },
-      user: {
-        id: user.id,
-      },
-    });
+    // Track event if Schematic is configured
+    if (client) {
+      await client.track({
+        event: featureFlagEvents[FeatureFlag.TITLE_GENERATIONS].event,
+        company: {
+          id: user.id,
+        },
+        user: {
+          id: user.id,
+        },
+      });
+    }
 
     console.log("🎯 Title generated:", title);
 
