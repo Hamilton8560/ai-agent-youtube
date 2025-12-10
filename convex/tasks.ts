@@ -269,6 +269,7 @@ export const saveOrganizedTaskItems = mutation({
         reason: v.string(),
         isParent: v.optional(v.boolean()),
         parentId: v.optional(v.string()),
+        checklistName: v.optional(v.string()),
       })
     ),
   },
@@ -311,6 +312,7 @@ export const saveOrganizedTaskItems = mutation({
           reason: task.reason,
           isParent: !!task.isParent,
           parentId: task.parentId,
+          checklistName: task.checklistName || "default",
           createdAt: now,
         });
         results.push(result);

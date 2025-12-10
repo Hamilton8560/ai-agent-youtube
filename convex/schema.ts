@@ -126,6 +126,7 @@ export default defineSchema({
     reason: v.string(),
     isParent: v.boolean(),
     parentId: v.optional(v.string()),
+    checklistName: v.optional(v.string()),
     createdAt: v.number(),
   })
     .index("by_user_id", ["userId"])
