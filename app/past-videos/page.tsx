@@ -7,6 +7,7 @@ import { useUser } from "@clerk/nextjs";
 import { getVideoDetails } from "@/actions/getVideoDetails";
 import { VideoDetails } from "@/types/types";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Loader2, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -108,11 +109,14 @@ export default function PastVideosPage() {
               <div className="border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow duration-300 h-full flex flex-col">
                 <div className="relative">
                   {details?.thumbnail ? (
-                    <img
-                      src={details.thumbnail}
-                      alt={details.title || "Video thumbnail"}
-                      className="w-full aspect-video object-cover"
-                    />
+                    <div className="relative w-full aspect-video">
+                      <Image
+                        src={details.thumbnail}
+                        alt={details.title || "Video thumbnail"}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
                   ) : (
                     <div className="w-full aspect-video bg-gray-200 flex items-center justify-center">
                       <Video className="h-12 w-12 text-gray-400" />
@@ -135,10 +139,12 @@ export default function PastVideosPage() {
                     <div className="flex items-center mt-auto pt-2 border-t border-gray-100">
                       <div className="flex items-center space-x-2">
                         {details.channel.thumbnail && (
-                          <img
+                          <Image
                             src={details.channel.thumbnail}
                             alt={details.channel.title}
-                            className="w-6 h-6 rounded-full"
+                            width={24}
+                            height={24}
+                            className="rounded-full"
                           />
                         )}
                         <span className="text-sm text-gray-600">

@@ -34,15 +34,17 @@ function Header() {
   ];
 
   // Authenticated links (only shown when signed in)
-  const authLinks = [{ name: "Past Videos", href: "/past-videos" }];
+  const authLinks = [
+    { name: "Past Videos", href: "/past-videos" },
+    { name: "Video Ideas", href: "/ideas" },
+  ];
 
   return (
     <header
-      className={`sticky top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
+      className={`sticky top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
           ? "py-2 bg-white/90 backdrop-blur-md shadow-md"
           : "py-4 bg-transparent"
-      }`}
+        }`}
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
@@ -180,9 +182,8 @@ function Header() {
 
         {/* Mobile menu */}
         <div
-          className={`md:hidden transition-all duration-300 overflow-hidden ${
-            menuOpen ? "max-h-96 py-4" : "max-h-0"
-          }`}
+          className={`md:hidden transition-all duration-300 overflow-hidden ${menuOpen ? "max-h-96 py-4" : "max-h-0"
+            }`}
         >
           <nav className="flex flex-col gap-3">
             {navLinks.map((link) => (
