@@ -133,4 +133,15 @@ export default defineSchema({
     .index("by_video_id", ["videoId"])
     .index("by_user_and_video", ["userId", "videoId"])
     .index("by_parent_id", ["parentId"]),
+
+  videoIdeas: defineTable({
+    userId: v.string(),
+    title: v.string(),
+    description: v.optional(v.string()),
+    status: v.string(), // "idea", "scripting", "filming", "filmed", "uploaded"
+    storageId: v.optional(v.id("_storage")),
+    createdAt: v.number(),
+  })
+    .index("by_user_id", ["userId"])
+    .index("by_status", ["status"]),
 });

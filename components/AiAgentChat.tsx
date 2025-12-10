@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import Image from "next/image";
 import { Message, useChat } from "@ai-sdk/react";
 import ReactMarkdown from "react-markdown";
 import { useSchematicFlag } from "@schematichq/schematic-react";
@@ -40,17 +41,17 @@ interface StorableMessage {
   createdAt: number;
   parts?: Array<
     | {
-        type: "text";
-        text: string;
-      }
+      type: "text";
+      text: string;
+    }
     | {
-        type: "tool-invocation";
-        toolInvocation: {
-          toolCallId: string;
-          toolName: string;
-          result?: Record<string, unknown>;
-        };
-      }
+      type: "tool-invocation";
+      toolInvocation: {
+        toolCallId: string;
+        toolName: string;
+        result?: Record<string, unknown>;
+      };
+    }
   >;
 }
 
@@ -100,25 +101,25 @@ const messageToStorable = (message: Message): StorableMessage => {
     // Use a more explicit type assertion for compatibility
     parts: message.parts
       ? (message.parts
-          .map((part) => {
-            if (part.type === "text") {
-              return { type: "text", text: part.text } as const;
-            } else if (part.type === "tool-invocation") {
-              return {
-                type: "tool-invocation",
-                toolInvocation: {
-                  toolCallId: part.toolInvocation.toolCallId,
-                  toolName: part.toolInvocation.toolName,
-                  result: (part.toolInvocation as any).result as
-                    | Record<string, unknown>
-                    | undefined,
-                },
-              } as const;
-            }
-            // Handle any unknown part types by skipping them
-            return null;
-          })
-          .filter(Boolean) as StorableMessage["parts"])
+        .map((part) => {
+          if (part.type === "text") {
+            return { type: "text", text: part.text } as const;
+          } else if (part.type === "tool-invocation") {
+            return {
+              type: "tool-invocation",
+              toolInvocation: {
+                toolCallId: part.toolInvocation.toolCallId,
+                toolName: part.toolInvocation.toolName,
+                result: (part.toolInvocation as any).result as
+                  | Record<string, unknown>
+                  | undefined,
+              },
+            } as const;
+          }
+          // Handle any unknown part types by skipping them
+          return null;
+        })
+        .filter(Boolean) as StorableMessage["parts"])
       : undefined,
   };
 };
@@ -536,9 +537,8 @@ function AiAgentChat({ videoId }: { videoId: string }) {
               className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
             >
               <div
-                className={`max-w-[85%] relative group ${
-                  m.role === "user" ? "bg-blue-500" : "bg-gray-100"
-                } rounded-2xl px-4 py-3`}
+                className={`max-w-[85%] relative group ${m.role === "user" ? "bg-blue-500" : "bg-gray-100"
+                  } rounded-2xl px-4 py-3`}
               >
                 {/* Copy button - appears on hover */}
                 <button
@@ -638,17 +638,20 @@ function AiAgentChat({ videoId }: { videoId: string }) {
                                 (
                                   part as ToolPart
                                 ).toolInvocation.toolName.includes("image")) &&
-                              typeof (part as ToolPart).toolInvocation.result
-                                ?.imageUrl === "string" ? (
+                                typeof (part as ToolPart).toolInvocation.result
+                                  ?.imageUrl === "string" ? (
                                 <div className="mt-2">
-                                  <img
-                                    src={
-                                      (part as ToolPart).toolInvocation.result
-                                        ?.imageUrl as string
-                                    }
-                                    alt="Generated thumbnail"
-                                    className="rounded-md w-full max-w-md object-contain border border-gray-100 shadow-sm"
-                                  />
+                                  <div className="relative w-full max-w-md aspect-video">
+                                    <Image
+                                      src={
+                                        (part as ToolPart).toolInvocation.result
+                                          ?.imageUrl as string
+                                      }
+                                      alt="Generated thumbnail"
+                                      fill
+                                      className="rounded-md object-contain border border-gray-100 shadow-sm"
+                                    />
+                                  </div>
                                 </div>
                               ) : (
                                 <pre className="text-xs bg-white/75 p-2 rounded overflow-auto max-h-40">
@@ -692,11 +695,10 @@ function AiAgentChat({ videoId }: { videoId: string }) {
                   ? "AI is thinking..."
                   : "Ask me about your video..."
               }
-              className={`w-full rounded-lg border ${
-                status === "streaming" || status === "submitted"
-                  ? "bg-gray-50 border-gray-200"
-                  : "border-gray-200"
-              } px-4 py-3 pr-16 focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-400`}
+              className={`w-full rounded-lg border ${status === "streaming" || status === "submitted"
+                ? "bg-gray-50 border-gray-200"
+                : "border-gray-200"
+                } px-4 py-3 pr-16 focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-400`}
               disabled={status === "streaming" || status === "submitted"}
             />
             <div className="absolute right-2 top-2">
@@ -705,11 +707,10 @@ function AiAgentChat({ videoId }: { videoId: string }) {
                 {/* Submit button */}
                 <button
                   type="submit"
-                  className={`p-1.5 rounded-md transition-colors ${
-                    status === "streaming" || status === "submitted"
-                      ? "text-gray-400 cursor-not-allowed"
-                      : "text-blue-600 hover:text-blue-800 hover:bg-blue-50"
-                  }`}
+                  className={`p-1.5 rounded-md transition-colors ${status === "streaming" || status === "submitted"
+                    ? "text-gray-400 cursor-not-allowed"
+                    : "text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+                    }`}
                   title={
                     status === "streaming" || status === "submitted"
                       ? "AI is thinking..."
@@ -758,11 +759,10 @@ function AiAgentChat({ videoId }: { videoId: string }) {
                 <button
                   type="button"
                   onClick={generateScript}
-                  className={`text-xs px-3 py-1.5 rounded-md flex items-center gap-1.5 transition-colors ${
-                    status === "streaming" || status === "submitted"
-                      ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                      : "bg-gray-100 hover:bg-gray-200 text-gray-700"
-                  }`}
+                  className={`text-xs px-3 py-1.5 rounded-md flex items-center gap-1.5 transition-colors ${status === "streaming" || status === "submitted"
+                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                    : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+                    }`}
                   disabled={status === "streaming" || status === "submitted"}
                 >
                   <PenIcon className="w-3.5 h-3.5" />
@@ -773,11 +773,10 @@ function AiAgentChat({ videoId }: { videoId: string }) {
                 <button
                   type="button"
                   onClick={generateTitle}
-                  className={`text-xs px-3 py-1.5 rounded-md flex items-center gap-1.5 transition-colors ${
-                    status === "streaming" || status === "submitted"
-                      ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                      : "bg-gray-100 hover:bg-gray-200 text-gray-700"
-                  }`}
+                  className={`text-xs px-3 py-1.5 rounded-md flex items-center gap-1.5 transition-colors ${status === "streaming" || status === "submitted"
+                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                    : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+                    }`}
                   disabled={status === "streaming" || status === "submitted"}
                 >
                   <LetterText className="w-3.5 h-3.5" />
@@ -788,11 +787,10 @@ function AiAgentChat({ videoId }: { videoId: string }) {
                 <button
                   type="button"
                   onClick={generateImage}
-                  className={`text-xs px-3 py-1.5 rounded-md flex items-center gap-1.5 transition-colors ${
-                    status === "streaming" || status === "submitted"
-                      ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                      : "bg-gray-100 hover:bg-gray-200 text-gray-700"
-                  }`}
+                  className={`text-xs px-3 py-1.5 rounded-md flex items-center gap-1.5 transition-colors ${status === "streaming" || status === "submitted"
+                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                    : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+                    }`}
                   disabled={status === "streaming" || status === "submitted"}
                 >
                   <ImageIcon className="w-3.5 h-3.5" />

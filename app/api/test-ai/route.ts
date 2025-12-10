@@ -26,6 +26,7 @@ export async function GET() {
         messages: [{ role: "user", content: "Say hello" }],
       });
 
+      
       if (response && response.content && response.content.length > 0) {
         results.claude = {
           status: "success",

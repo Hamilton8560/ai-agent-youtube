@@ -14,6 +14,7 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as chats from "../chats.js";
+import type * as ideas from "../ideas.js";
 import type * as images from "../images.js";
 import type * as tasks from "../tasks.js";
 import type * as titles from "../titles.js";
@@ -30,6 +31,7 @@ import type * as videos from "../videos.js";
  */
 declare const fullApi: ApiFromModules<{
   chats: typeof chats;
+  ideas: typeof ideas;
   images: typeof images;
   tasks: typeof tasks;
   titles: typeof titles;

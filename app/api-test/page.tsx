@@ -1,10 +1,20 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 
+interface TestResult {
+  status: string;
+  message: string;
+}
+
+interface ApiTestResults {
+  claude: TestResult;
+  openai: TestResult;
+}
+
 export default function ApiTestPage() {
-  const [results, setResults] = useState<any>(null);
+  const [results, setResults] = useState<ApiTestResults | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -47,11 +57,10 @@ export default function ApiTestPage() {
                 <h3 className="font-medium mb-2">Claude API</h3>
                 <div className="flex items-center">
                   <div
-                    className={`w-3 h-3 rounded-full mr-2 ${
-                      results.claude.status === "success"
-                        ? "bg-green-500"
-                        : "bg-red-500"
-                    }`}
+                    className={`w-3 h-3 rounded-full mr-2 ${results.claude.status === "success"
+                      ? "bg-green-500"
+                      : "bg-red-500"
+                      }`}
                   />
                   <span>
                     Status:{" "}
@@ -65,11 +74,10 @@ export default function ApiTestPage() {
                 <h3 className="font-medium mb-2">OpenAI API</h3>
                 <div className="flex items-center">
                   <div
-                    className={`w-3 h-3 rounded-full mr-2 ${
-                      results.openai.status === "success"
-                        ? "bg-green-500"
-                        : "bg-red-500"
-                    }`}
+                    className={`w-3 h-3 rounded-full mr-2 ${results.openai.status === "success"
+                      ? "bg-green-500"
+                      : "bg-red-500"
+                      }`}
                   />
                   <span>
                     Status:{" "}
@@ -104,11 +112,11 @@ export default function ApiTestPage() {
                 )}
                 {(results.claude.status === "success" ||
                   results.openai.status === "success") && (
-                  <li className="text-green-600">
-                    At least one AI service is working! You should be able to
-                    use the "Organize AI" button.
-                  </li>
-                )}
+                    <li className="text-green-600">
+                      At least one AI service is working! You should be able to
+                      use the &quot;Organize AI&quot; button.
+                    </li>
+                  )}
               </ul>
             </div>
           </div>
