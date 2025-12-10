@@ -29,7 +29,7 @@ function Header() {
   // Navigation links
   const navLinks = [
     { name: "Features", href: "#features" },
-    { name: "How It Works", href: "#how-it-works" },
+    { name: "How It Works", href: "/how-it-works" },
     { name: "Pricing", href: "#pricing" },
   ];
 
